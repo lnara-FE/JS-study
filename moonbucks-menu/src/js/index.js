@@ -9,38 +9,18 @@
 // TODO 메뉴 수정
 // - [O] 메뉴의 수정 버튼 클릭 이벤트를 받고, 메뉴 수정하는 모달창(prompt)이 뜬다.
 // - [O] 모달창에서 신규 메뉴명을 입력 받고, 확인 버튼을 누르면 메뉴가 수정된다.
+// TODO 메뉴 삭제
+// - [O] 메뉴 삭제 버튼 클릭 이벤트를 받고, 메뉴 삭제 컨펌 모달창(confirm)이 뜬다.
+// - [O] 확인 버튼을 클릭하면 메뉴가 삭제된다.
+// - [O] 총 메뉴 갯수를 count하여 상단에 보여준다.
 
 const $ = (selector) => document.querySelector(selector);
 
 function App() {
-  // TODO 메뉴 삭제
-  // - [O] 메뉴 삭제 버튼 클릭 이벤트를 받고, 메뉴 삭제 컨펌 모달창(confirm)이 뜬다.
-  // - [O] 확인 버튼을 클릭하면 메뉴가 삭제된다.
-  // - [O] 총 메뉴 갯수를 count하여 상단에 보여준다.
   const updateMenuCount = () => {
     const menuCount = $('#menu-list').querySelectorAll('li').length;
     $('.menu-count').innerText = `총 ${menuCount} 개`;
-  }
-
-  $('#menu-list').addEventListener('click', (e) => {
-    if (e.target.classList.contains('menu-edit-button')) {
-      const $menuName = e.target.closest('li').querySelector('.menu-name');
-      const updatedMenuName = prompt('메뉴명을 수정하세요.', $menuName.innerText);
-      $menuName.innerText = updatedMenuName;
-    }
-
-    if (e.target.classList.contains('menu-remove-button')) {
-      if (confirm('정말 삭제하시겠습니다?')) {
-        e.target.closest('li').remove();
-        updateMenuCount();
-      }
-    }
-  });
-
-  // form 태그가 자동으로 전송되는걸 막음
-  $('#menu-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-  });
+  };
 
   const addMenuName = () => {
     if ($('#menu-name').value === ''){
@@ -69,14 +49,37 @@ function App() {
     $('#menu-list').insertAdjacentHTML('beforeend', menuItemTemplate(menuName));
     updateMenuCount();
     $('#menu-name').value = '';
-  }
+  };
 
-  // 메뉴의 이름을 입력 받고 확인 버튼을 클릭
-  $('#menu-submit-button').addEventListener('click', (e) => {
-    addMenuName();
+  const updateMenuName = (e) => {
+    const $menuName = e.target.closest('li').querySelector('.menu-name');
+    const updatedMenuName = prompt('메뉴명을 수정하세요.', $menuName.innerText);
+    $menuName.innerText = updatedMenuName;
+  };
+
+  const removeMenuName = (e) => {
+    if (confirm('정말 삭제하시겠습니다?')) {
+      e.target.closest('li').remove();
+      updateMenuCount();
+    }
+  };
+
+  $('#menu-list').addEventListener('click', (e) => {
+    if (e.target.classList.contains('menu-edit-button')) {
+      updateMenuName(e);
+    }
+
+    if (e.target.classList.contains('menu-remove-button')) {
+      removeMenuName(e);
+    }
   });
 
-  // 메뉴의 이름을 입력 받고 엔터키 입력
+  $('#menu-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
+
+  $('#menu-submit-button').addEventListener('click', addMenuName);
+
   $('#menu-name').addEventListener('keypress', (e) => {
     if(e.key !== 'Enter') {
       return;
