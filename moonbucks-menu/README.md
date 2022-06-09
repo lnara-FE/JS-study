@@ -87,3 +87,7 @@ TODO 품절 상태 관리
 - 품절 버튼을 클릭하면 localStorage에 상태값이 저장된다.
 - 클릭 이벤트에서 가장 가까운 li 태그의 class 속성 값에 sold-out을 추가한다.
 <br>
+
+## 📝 License
+
+This project is [MIT](https://github.com/blackcoffee-study/moonbucks-menu-server/blob/main/LICENSE) licensed.

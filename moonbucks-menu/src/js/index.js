@@ -1,6 +1,37 @@
 import { $ } from './utils/dom.js';
 import { store } from './store/index.js';
 
+// step3 요구사항 구현을 위한 전략 - 서버와의 통신을 통해 메뉴 관리하기
+// TODO 서버 요청 부분
+// - [O] 웹 서버를 띄운다.
+// - [O] 서버에 새로운 메뉴명이 추가될 수 있도록 요청한다.
+// - [O] 서버에 카테고리별 메뉴 리스트를 불러온다.
+// - [] 서버에 메뉴가 수정될 수 있도록 요청한다.
+// - [] 서버에 메뉴의 품절 상태가 토글 될 수 있도록 요청한다.
+// - [] 서버에 메뉴가 삭제 될 수 있도록 요청한다.
+
+const BASE_URL = 'http://localhost:3000/api';
+
+const MenuApi = {
+  async getAllMenuByCategory(category) {
+    const response = await fetch(`${BASE_URL}/category/${category}/menu`)
+    return response.json();
+  },
+
+  async createMenu(category, name) {
+    const response = await fetch(`${BASE_URL}/category/${category}/menu`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+    if (!response.ok) {
+      console.error('에러가 발생했습니다.');
+    }
+  },
+};
+
 function App() {
   this.menu = {
     espresso: [],
@@ -10,10 +41,10 @@ function App() {
     desert: [],
   };
   this.currentCategory = 'espresso';
-  this.init = () => {
-    if (store.getLocalStorage()) {
-      this.menu = store.getLocalStorage();
-    }
+  this.init = async () => {
+    this.menu[this.currentCategory] = await MenuApi.getAllMenuByCategory(
+      this.currentCategory
+    );
     render();
     initEventListeners();
   };
@@ -53,14 +84,16 @@ function App() {
     $('.menu-count').innerText = `총 ${menuCount} 개`;
   };
 
-  const addMenuName = () => {
+  const addMenuName = async () => {
     if ($('#menu-name').value === ''){
       alert('값을 입력해주세요.');
       return;
     }
     const menuName = $('#menu-name').value;
-    this.menu[this.currentCategory].push({ name: menuName });
-    store.setLocalStorage(this.menu);
+    await MenuApi.createMenu(this.currentCategory, menuName); //메뉴 추가
+    this.menu[this.currentCategory] = await MenuApi.getAllMenuByCategory(
+      this.currentCategory
+    ); //전체 메뉴 리스트 불러오기
     render();
     $('#menu-name').value = '';
   };
@@ -122,12 +155,15 @@ function App() {
       addMenuName();
     });
   
-    $('nav').addEventListener('click', (e) => {
+    $('nav').addEventListener('click', async (e) => {
       const isCategoryButton = e.target.classList.contains('cafe-category-name')
       if (isCategoryButton) {
         const categoryName = e.target.dataset.categoryName;
         this.currentCategory = categoryName;
         $('#category-title').innerText = `${e.target.innerText} 메뉴 관리`;
+        this.menu[this.currentCategory] = await MenuApi.getAllMenuByCategory(
+          this.currentCategory
+        );
         render();
       }
     });
