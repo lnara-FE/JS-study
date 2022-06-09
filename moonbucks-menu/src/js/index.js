@@ -8,7 +8,7 @@ import { store } from './store/index.js';
 // - [O] 서버에 카테고리별 메뉴 리스트를 불러온다.
 // - [O] 서버에 메뉴가 수정될 수 있도록 요청한다.
 // - [O] 서버에 메뉴의 품절 상태가 토글 될 수 있도록 요청한다.
-// - [] 서버에 메뉴가 삭제 될 수 있도록 요청한다.
+// - [O] 서버에 메뉴가 삭제 될 수 있도록 요청한다.
 
 const BASE_URL = 'http://localhost:3000/api';
 
@@ -52,7 +52,15 @@ const MenuApi = {
     if (!response.ok) {
       console.error('에러가 발생 했습니다.');
     }
-    return response.json();
+  },
+
+  async deletMenu(category, menuId) {
+    const response = await fetch(`${BASE_URL}/category/${category}/menu/${menuId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      console.error('에러가 발생 했습니다.');
+    }
   },
 };
 
@@ -133,13 +141,15 @@ function App() {
     render();
   };
 
-  const removeMenuName = (e) => {
+  const removeMenuName = async (e) => {
     if (confirm('정말 삭제하시겠습니다?')) {
       const menuId = e.target.closest("li").dataset.menuId;
-      this.menu[this.currentCategory].splice(menuId, 1);
-      store.setLocalStorage(this.menu);
+      await MenuApi.deletMenu(this.currentCategory, menuId);
+      this.menu[this.currentCategory] = await MenuApi.getAllMenuByCategory(
+        this.currentCategory
+      );
       render();
-    }
+    };
   };
 
   const soldOutMenu = async (e) => {
@@ -149,7 +159,7 @@ function App() {
       this.currentCategory
     );
     render();
-  }
+  };
 
   const initEventListeners = () => {
     $('#menu-list').addEventListener('click', (e) => {
@@ -194,7 +204,7 @@ function App() {
         render();
       }
     });
-  }
+  };
 }
 
 const app = new App();
