@@ -1,29 +1,14 @@
-// step2 요구사항 구현을 위한 전략 - 상태 관리로 메뉴 관리하기
-// TODO 품절 상태 관리
-// - [O] 품절 버튼을 추가한다.
-// - [O] 품절 버튼을 클릭하면 localStorage에 상태값이 저장된다.
-// - [O] 클릭 이벤트에서 가장 가까운 li태그의 class 속성 값에 sold-out을 추가한다.
-
-const $ = (selector) => document.querySelector(selector);
-
-const store = {
-  setLocalStorage(menu) {
-    localStorage.setItem("menu", JSON.stringify(menu));
-  },
-  getLocalStorage() {
-    return JSON.parse(localStorage.getItem("menu"));
-  },
-};
+import { $ } from './utils/dom.js';
+import { store } from './store/index.js';
 
 function App() {
-  // 상태 변하는 데이터, 이 앱에서 변하는 것이 무엇인가 - 메뉴명
   this.menu = {
     espresso: [],
     frappuccino: [],
     blended: [],
     teavana: [],
     desert: [],
-  }; // 초기화를 하지 않으면 어떤 데이터가 올지 몰라 push method 사용 불가, 다른 사람과 협업을 할 때 어떤 상태로 관리가 되는지 명확해짐
+  };
   this.currentCategory = 'espresso';
   this.init = () => {
     if (store.getLocalStorage()) {
