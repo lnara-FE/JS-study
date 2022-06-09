@@ -13,6 +13,13 @@
   </a>
 </p>
 
+## 🔥 Projects!
+
+<p align="middle">
+  <img width="400" src="./src/images/moonbucks-main.png">
+</p>
+<br>
+
 ### 🎯 step1 요구사항 구현을 위한 전략 - 돔 조작과 이벤트 핸들링으로 메뉴 관리하기
 
 요구사항을 먼저 체크하고 정리해 여행 계획을 짜는 것 처럼 순서를 정해야한다.
