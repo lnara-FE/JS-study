@@ -88,6 +88,31 @@ TODO 품절 상태 관리
 - 클릭 이벤트에서 가장 가까운 li 태그의 class 속성 값에 sold-out을 추가한다.
 <br>
 
+### 🎯 step3 요구사항 구현을 위한 전략 - 서버와의 통신을 통해 메뉴 관리하기
+
+---
+
+TODO 서버 요청 부분
+
+- 웹 서버를 띄운다.
+- 서버에 새로운 메뉴명이 추가될 수 있도록 요청한다.
+- 서버에 카테고리별 메뉴 리스트를 불러온다.
+- 서버에 메뉴가 수정될 수 있도록 요청한다.
+- 서버에 메뉴의 품절 상태가 토글 될 수 있도록 요청한다.
+- 서버에 메뉴가 삭제 될 수 있도록 요청한다.
+
+TODO 리팩터링 부분
+
+- localStroage에 저장하는 로직은 지운다.
+- fetch 비동기 api를 사용하는 부분을 async awit을 사용하여 구현한다.
+
+TODO 사용자 경험
+
+- API 통신이 실패하는 경우에 대해 사용자가 알 수 있게 alert으로 예외처리를 한다.
+- 중복되는 메뉴는 추가할 수 없다.
+<br>
+
+
 ## 📝 License
 
 This project is [MIT](https://github.com/blackcoffee-study/moonbucks-menu-server/blob/main/LICENSE) licensed.
